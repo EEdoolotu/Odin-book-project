@@ -22,15 +22,28 @@ addBtn.onclick = function(e) {
 
 const myLibrary = []
 
-function Book(title, author, pages, read) {
-    id = this.crypto.randomUUID();
+function Book(id, title, author, pages, read) {
+    this.id = crypto.randomUUID();
     this.title = title;
     this. author = author;
     this.pages = pages;
     this.read = read;
 }
 
-function addBookToLibrary(id,newTitle, newAuthor, newPages, newRead) {
-    let newBook = new Book(title, author, pages, read);
+function addBookToLibrary() {
+    const titleVal = newTitle.value;
+    const authorVal = newAuthor.value;
+    const pagesVal = newPages.value
+    const readVal = newRead.value
+
+    let newBook = new Book(titleVal, authorVal, pagesVal, readVal);
     myLibrary.push(newBook)
+
+    modal.style.display = "none";
+}
+
+function showBook() {
+    const div = document.createElement("div")
+
+    div.textContent = `<span></span>`;
 }
