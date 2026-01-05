@@ -14,7 +14,11 @@ closebtn.onclick = function() {
     modal.style.display = "none"
 }
 
-const addBtn = document.addEventListener("click", addBookToLibrary)
+const addBtn = document.getElementById("add-button")
+addBtn.onclick = function(e) {
+    e.preventDefault()
+    addBookToLibrary()
+}
 
 const myLibrary = []
 
