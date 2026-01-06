@@ -1,3 +1,14 @@
+let myLibrary = JSON.parse(localStorage.getItem("myLibrary") || []);
+
+myLibrary = myLibrary.map((book) => {
+    const newBook = new Book(book.title, book.author, book.pages, book.read);
+    newBook.id = book.id;
+    return newBook;
+})
+
+displayLibrary()
+
+
 const newTitle = document.getElementById("title")
 const newAuthor = document.getElementById("author")
 const newPages = document.getElementById("pages")
@@ -20,7 +31,7 @@ addBtn.onclick = function(e) {
     addBookToLibrary()
 }
 
-let myLibrary = []
+
 
 function Book(title, author, pages, read) {
     this.id = crypto.randomUUID();
@@ -42,6 +53,7 @@ function addBookToLibrary() {
 
     let newBook = new Book(titleVal, authorVal, pagesVal, readVal);
     myLibrary.push(newBook)
+    savelocal()
 
     modal.style.display = "none";
 
@@ -71,6 +83,7 @@ function displayLibrary() {
 
         toggleBtn.onclick = function() {
             book.toggleRead();
+            savelocal()
 
             displayLibrary()
         }
@@ -90,6 +103,11 @@ function displayLibrary() {
 
 function deleteBook(idToDelete) {
     myLibrary = myLibrary.filter(book => book.id !== idToDelete);
+    savelocal();
     displayLibrary();
 
+}
+
+function savelocal() {
+    localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
 }
