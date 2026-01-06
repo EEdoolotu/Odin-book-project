@@ -20,9 +20,9 @@ addBtn.onclick = function(e) {
     addBookToLibrary()
 }
 
-const myLibrary = []
+let myLibrary = []
 
-function Book(id, title, author, pages, read) {
+function Book(title, author, pages, read) {
     this.id = crypto.randomUUID();
     this.title = title;
     this. author = author;
@@ -30,20 +30,66 @@ function Book(id, title, author, pages, read) {
     this.read = read;
 }
 
+Book.prototype.toggleRead = function() {
+    this.read = !this.read
+}
+
 function addBookToLibrary() {
     const titleVal = newTitle.value;
     const authorVal = newAuthor.value;
     const pagesVal = newPages.value
-    const readVal = newRead.value
+    const readVal = newRead.checked
 
     let newBook = new Book(titleVal, authorVal, pagesVal, readVal);
     myLibrary.push(newBook)
 
     modal.style.display = "none";
+
+    displayLibrary()
+    document.getElementById("book-form").reset()
+}
+function displayLibrary() {
+
+    const container = document.querySelector("#container")
+    container.innerHTML = "";
+
+    myLibrary.forEach((book) => {
+        const div = document.createElement("div")
+        div.classList.add("book-card")
+
+        const deleteBtn = document.createElement("button")
+        deleteBtn.textContent = "Delete"
+        deleteBtn.classList.add("delete-btn");
+
+        deleteBtn.onclick = function () {
+            deleteBook(book.id)
+        }
+
+        const toggleBtn = document.createElement("button");
+        toggleBtn.textContent = book.read ? "Read" : "Not-Read";
+        toggleBtn.classList.add(book.read ? "read-btn" : "not-read-btn")
+
+        toggleBtn.onclick = function() {
+            book.toggleRead();
+
+            displayLibrary()
+        }
+        
+        const bookInfo = document.createElement("p")
+        bookInfo.classList.add("book-info")
+        bookInfo.textContent = `${book.title} by ${book.author} with ${book.pages} pages`;
+        div.appendChild(bookInfo)
+        div.appendChild(deleteBtn)
+        div.appendChild(toggleBtn)
+        div.setAttribute("data-id", book.id)
+        container.appendChild(div)
+        
+    });
 }
 
-function showBook() {
-    const div = document.createElement("div")
 
-    div.textContent = `<span></span>`;
+function deleteBook(idToDelete) {
+    myLibrary = myLibrary.filter(book => book.id !== idToDelete);
+    displayLibrary();
+
 }

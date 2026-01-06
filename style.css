@@ -1,3 +1,49 @@
+body {
+    /* This adds a light white tint (0.8 opacity) over the image */
+    background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.4)), 
+                url('Gemini_Generated_Image_800sep800sep800s.png');
+    
+    background-size: cover;        /* Makes the image fill the screen */
+    background-position: center;   /* Centers the image */
+    background-attachment: fixed;  /* Keeps image still while you scroll books */
+    margin: 0;
+    min-height: 100vh;
+    display : flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    padding : 100px;
+    border : 3px solid black;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    width : 50%;
+    height : 80%
+}
+
+header {
+    display : flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#new-book-btn {
+    padding : 7px 20px;
+    background-color: greenyellow;
+    border : 5px solid greenyellow;
+    border-radius: 10px;
+    font-size: large;
+}
+
+h1 {
+    font-size: xxx-large;
+    font-weight: 700;
+}
+
+
+
 .book-grid {
     display: grid;
     /* This automatically wraps cards to the next line */
@@ -25,13 +71,13 @@
 }
 
 .book-card {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.4);
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
 }
 
