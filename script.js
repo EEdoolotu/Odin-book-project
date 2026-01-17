@@ -1,113 +1,89 @@
-let myLibrary = JSON.parse(localStorage.getItem("myLibrary") || []);
+const savedData = JSON.parse(localStorage.getItem("myLibrary")) || [];
 
-myLibrary = myLibrary.map((book) => {
-    const newBook = new Book(book.title, book.author, book.pages, book.read);
-    newBook.id = book.id;
-    return newBook;
-})
+let myLibrary = savedData.map(bookData => {
+    const book = new Book(bookData.title, bookData.author, bookData.pages, bookData.read);
+    book.id = bookData.id;
+    return book;
+});
 
-displayLibrary()
+const modal = document.getElementById("book-modal");
+const btn = document.getElementById("new-book-btn");
+const closeBtn = document.getElementById("close-button");
+const form = document.getElementById("book-form");
+const titleInput = document.getElementById("title");
+const authorInput = document.getElementById("author");
+const pagesInput = document.getElementById("pages");
+const readInput = document.getElementById("read-status");
 
-
-const newTitle = document.getElementById("title")
-const newAuthor = document.getElementById("author")
-const newPages = document.getElementById("pages")
-const newRead = document.getElementById("read-status")
-const modal = document.querySelector("#book-modal")
-const btn = document.querySelector("#new-book-btn")
-const closebtn = document.getElementById("close-button")
-
-btn.onclick = function() {
-    modal.style.display = "block"
-}
-
-closebtn.onclick = function() {
-    modal.style.display = "none"
-}
+btn.onclick = () => modal.style.display = "block";
+closeBtn.onclick = () => modal.style.display = "none";
 
 const addBtn = document.getElementById("add-button")
-addBtn.onclick = function(e) {
+addBtn.addEventListener("click", (e) => {
     e.preventDefault()
     addBookToLibrary()
-}
+})
 
 
 
-function Book(title, author, pages, read) {
+class Book {
+  constructor(title, author, pages, read) {
     this.id = crypto.randomUUID();
     this.title = title;
-    this. author = author;
+    this.author = author;
     this.pages = pages;
-    this.read = read;
-}
+    this.read = !!read;
+  }
 
-Book.prototype.toggleRead = function() {
-    this.read = !this.read
+  toggleRead() { this.read = !this.read; }
+  get readStatus() { return this.read ? "Read" : "Not Read"; }
+  set readStatus(val) { this.read = !!val; }
 }
 
 function addBookToLibrary() {
-    const titleVal = newTitle.value;
-    const authorVal = newAuthor.value;
-    const pagesVal = newPages.value
-    const readVal = newRead.checked
-
-    let newBook = new Book(titleVal, authorVal, pagesVal, readVal);
-    myLibrary.push(newBook)
-    savelocal()
-
-    modal.style.display = "none";
-
-    displayLibrary()
-    document.getElementById("book-form").reset()
+  const book = new Book(titleInput.value, authorInput.value, pagesInput.value, readInput.checked);
+  myLibrary.push(book);
+  saveLocal();
+  displayLibrary();
+  form.reset();
+  modal.style.display = "none";
 }
+
 function displayLibrary() {
+  const container = document.getElementById("container");
+  container.innerHTML = "";
+  myLibrary.forEach(book => {
+    const div = document.createElement("div");
+    div.classList.add("book-card");
 
-    const container = document.querySelector("#container")
-    container.innerHTML = "";
+    const info = document.createElement("span");
+    info.textContent = `${book.title} by ${book.author} (${book.pages} pages)`;
+    div.appendChild(info);
 
-    myLibrary.forEach((book) => {
-        const div = document.createElement("div")
-        div.classList.add("book-card")
+    const toggleBtn = document.createElement("button");
+    toggleBtn.textContent = book.readStatus;
+    toggleBtn.className = book.readStatus === "Read" ? "read-btn" : "not-read-btn";
+    toggleBtn.onclick = () => { book.toggleRead(); saveLocal(); displayLibrary(); };
+    div.appendChild(toggleBtn);
 
-        const deleteBtn = document.createElement("button")
-        deleteBtn.textContent = "Delete"
-        deleteBtn.classList.add("delete-btn");
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "Delete";
+    delBtn.onclick = () => { myLibrary = myLibrary.filter(b => b.id !== book.id); saveLocal(); displayLibrary(); };
+    div.appendChild(delBtn);
 
-        deleteBtn.onclick = function () {
-            deleteBook(book.id)
-        }
-
-        const toggleBtn = document.createElement("button");
-        toggleBtn.textContent = book.read ? "Read" : "Not-Read";
-        toggleBtn.classList.add(book.read ? "read-btn" : "not-read-btn")
-
-        toggleBtn.onclick = function() {
-            book.toggleRead();
-            savelocal()
-
-            displayLibrary()
-        }
-        
-        const bookInfo = document.createElement("p")
-        bookInfo.classList.add("book-info")
-        bookInfo.textContent = `${book.title} by ${book.author} with ${book.pages} pages`;
-        div.appendChild(bookInfo)
-        div.appendChild(deleteBtn)
-        div.appendChild(toggleBtn)
-        div.setAttribute("data-id", book.id)
-        container.appendChild(div)
-        
-    });
+    container.appendChild(div);
+  });
 }
 
-
-function deleteBook(idToDelete) {
-    myLibrary = myLibrary.filter(book => book.id !== idToDelete);
-    savelocal();
-    displayLibrary();
-
+function saveLocal() {
+  const plain = myLibrary.map(book => ({
+    id: book.id,
+    title: book.title,
+    author: book.author,
+    pages: book.pages,
+    read: book.readStatus === "Read"
+  }));
+  localStorage.setItem("myLibrary", JSON.stringify(plain));
 }
 
-function savelocal() {
-    localStorage.setItem("myLibrary", JSON.stringify(myLibrary));
-}
+displayLibrary();

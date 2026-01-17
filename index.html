@@ -18,19 +18,20 @@
         </div>
 
         <div id="book-modal" class="modal">
-            <form id="book-form">
-                <input type="text" id="title" placeholder="Title" required>
-                <input type="text" id="author" placeholder="Author" required>
-                <input type="number" id="pages" placeholder="Pages" required>
-                <label>
-                    Read? <input type="checkbox" id="read-status">
-                </label>
-                <button id="add-button" type="submit">Add to Library</button>
-                <button id="close-button">Close</button>
-
-            </form>
-            
+            <div class="modal-content">
+                <form id="book-form">
+                    <input type="text" id="title" placeholder="Title" required>
+                    <input type="text" id="author" placeholder="Author" required>
+                    <input type="number" id="pages" placeholder="Pages" required>
+                    <label>
+                        Read? <input type="checkbox" id="read-status">
+                    </label>
+                    <button id="add-button" type="submit">Add to Library</button>
+                    <button id="close-button" type="button">Close</button>
+                </form>
+            </div>
         </div>
+
         <div class="book-list">
             <header>Book List</header>
             <main id="library-grid" class="book-grid">
